@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.board">
+	<!-- id , parameterType , resultType -->
+
+	<!-- 메인 페이지 -->
+	<select id="view" parameterType="custom" resultType="custom">
+		select busi_num, custom, shortname, ceo, charge_person, busi_condition, item, post_num, addr1, addr2, tel, fax, homepage, co_yn, foreign_yn, tax_yn, country_eng, country_kor, special_relation, trade_stop, to_char(contract_period_s, 'yyyy-mm-dd') as contract_period_s, to_char(contract_period_e, 'yyyy-mm-dd') as contract_period_e, regi_info_man, to_char(regi_info_date, 'yyyy-mm-dd hh24:mi:ss') as regi_info_date, modi_info_man, to_char(modi_info_date, 'yyyy-mm-dd hh24:mi:ss') as modi_info_date, factory, trade_bank, account_num
+		from CUSTOM
+		join ACCOUNT using (busi_num)
+		where busi_num = #{busi_num}
+	</select>
+
+	<select id="search_both" parameterType="custom" resultType="custom">
+		select busi_num, custom
+		from CUSTOM
+		where CUSTOM like '%'||#{custom}||'%'
+		or busi_num like '%'||#{busi_num}||'%'
+		order by custom
+	</select>
+	
+	<select id="search_all" parameterType="custom" resultType="custom">
+		select busi_num, custom
+		from CUSTOM
+		order by custom
+	</select>
+	
+	<select id="search_busi_num" parameterType="custom" resultType="custom">
+		select busi_num, custom
+		from CUSTOM
+		where busi_num like '%'||#{busi_num}||'%'
+		order by custom
+	</select>
+	
+	<select id="search_custom" parameterType="custom" resultType="custom">
+		select busi_num, custom
+		from CUSTOM
+		where CUSTOM like '%'||#{custom}||'%'
+		order by custom
+	</select>
+
+	<insert id="save_custom" parameterType="custom">
+		insert into custom
+		VALUES (#{busi_num},
+				#{custom},
+				#{shortname}, 
+				#{ceo}, 
+				#{charge_person}, 
+				#{busi_condition}, 
+				#{item}, 
+				#{post_num}, 
+				#{addr1}, 
+				#{addr2}, 
+				#{tel}, 
+				#{fax}, 
+				#{homepage}, 
+				to_number(#{co_yn}), 
+				to_number(#{foreign_yn}), 
+				to_number(#{tax_yn}), 
+				#{country_eng}, 
+				#{country_kor}, 
+				to_number(#{special_relation}), 
+				to_number(#{trade_stop}), 
+				to_date(#{contract_period_s},'yyyy-mm-dd'), 
+				to_date(#{contract_period_e},'yyyy-mm-dd'), 
+				#{regi_info_man}, 
+				to_date(#{regi_info_date},'yyyy-mm-dd hh24:mi:ss'), 
+				#{modi_info_man}, 
+				to_date(#{modi_info_date},'yyyy-mm-dd hh24:mi:ss'))
+	</insert>
+	
+	<insert id="save_account" parameterType="custom">
+		insert into account
+		VALUES (#{busi_num}, #{factory}, #{trade_bank}, #{account_num})
+	</insert>
+	
+	<delete id="del_custom" parameterType="custom">
+		delete from custom
+		where busi_num = #{busi_num}
+	</delete>
+	
+	<delete id="del_account" parameterType="custom">
+		delete from account
+		where busi_num = #{busi_num}
+	</delete>
+</mapper>
